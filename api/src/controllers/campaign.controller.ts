@@ -18,5 +18,4 @@ class CampaignController {
   }
 }
 
-
-export const campaignController = new CampaignController()
+export const campaignController = new CampaignController();
