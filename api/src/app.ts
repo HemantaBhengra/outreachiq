@@ -5,7 +5,7 @@ import { errorHandler } from "./middlewares/error.middleware";
 const app: Express = express();
 
 app.use(express.json());
-app.use('/campaigns', campaignRouter)
-app.use(errorHandler)
+app.use("/campaigns", campaignRouter);
+app.use(errorHandler);
 
 export { app };
