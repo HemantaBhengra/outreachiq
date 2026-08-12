@@ -25,7 +25,6 @@ describe("Campaign Routes — Integration", () => {
         .send({
             name:"",
             subject :"Quick question"
-             // missing body and userId
         })
         expect(res.status).toBe(400)
         expect(res.body).toHaveProperty("message","Validation failed")
