@@ -5,17 +5,17 @@ class CampaignController {
   create = asyncHandler(async (req: Request, res: Response) => {
     const { name, subject, body, userId } = req.body;
 
-    const campaing = campaignService.createCampaign({
+    const campaign = await campaignService.createCampaign({
       name,
       subject,
       body,
       userId,
     });
-    res.status(201).json(campaing);
+    res.status(201).json(campaign);
   });
 
   getAll = asyncHandler(async (req: Request, res: Response) => {
-    const campaigns = campaignService.getAllCampaigns();
+    const campaigns = await campaignService.getAllCampaigns();
     res.status(200).json(campaigns);
   });
 }

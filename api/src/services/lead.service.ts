@@ -1,16 +1,20 @@
-import { leadRepository, LeadRepository } from "../repositories/lead.respository"
+import { promises } from "node:dns";
+import {
+  leadRepository,
+  LeadRepository,
+} from "../repositories/lead.repository";
 import { CreateLeadInput, Lead } from "../types/lead.types";
 
 export class LeadService {
   constructor(private repository: LeadRepository) {}
 
-  createLead(data: CreateLeadInput): Lead {
+  createLead(data: CreateLeadInput): Promise<Lead> {
     return this.repository.create(data);
   }
 
-  getAllLeads(): Lead[] {
+  getAllLeads(): Promise<Lead[]> {
     return this.repository.findAll();
   }
 }
 
-export const leadService = new LeadService(leadRepository)
+export const leadService = new LeadService(leadRepository);

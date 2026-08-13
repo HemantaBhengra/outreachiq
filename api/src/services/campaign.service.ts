@@ -1,16 +1,19 @@
-import {CampaignRepository, campaignRepository} from "../repositories/campaign.repository"
-import { CreateCampaignInput,Campaign } from "../types/campaign.types"
+import {
+  CampaignRepository,
+  campaignRepository,
+} from "../repositories/campaign.repository";
+import { CreateCampaignInput, Campaign } from "../types/campaign.types";
 
-export class CampaignService{
-    constructor(private repository : CampaignRepository) {}
+export class CampaignService {
+  constructor(private repository: CampaignRepository) {}
 
-    createCampaign(data:CreateCampaignInput): Campaign {
-        return this.repository.create(data)
-    }
+  createCampaign(data: CreateCampaignInput): Promise<Campaign> {
+    return this.repository.create(data);
+  }
 
-    getAllCampaigns(): Campaign[] {
-        return this.repository.findAll()
-    }
+  getAllCampaigns(): Promise<Campaign[]> {
+    return this.repository.findAll();
+  }
 }
 
-export const campaignService = new CampaignService(campaignRepository)
+export const campaignService = new CampaignService(campaignRepository);

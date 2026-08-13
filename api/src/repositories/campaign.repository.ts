@@ -1,19 +1,18 @@
 import { Campaign, CreateCampaignInput } from "../types/campaign.types";
-export class CampaignRepository {
-  private arr: Campaign[] = [];
+import { prisma } from "../lib/prisma";
 
-  create(data: CreateCampaignInput): Campaign {
-    const campaign: Campaign = {
+export class CampaignRepository {
+  async create(data: CreateCampaignInput): Promise<Campaign> {
+   return await prisma.campaign.create({
+    data: {
       ...data,
-      id: crypto.randomUUID(),
-      createdAt: new Date(),
-    };
-    this.arr.push(campaign);
-    return campaign;
+      status: "draft"
+    }
+   })
   }
 
-  findAll(): Campaign[] {
-    return this.arr;
+  async findAll():  Promise<Campaign[]> {
+    return await prisma.campaign.findMany()
   }
 }
 

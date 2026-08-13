@@ -5,17 +5,19 @@ class LeadController {
   create = asyncHandler(async (req: Request, res: Response) => {
     const { email, name, company } = req.body;
 
-    const lead = leadService.createLead({
-        email,name, company
+    const lead = await leadService.createLead({
+      email,
+      name,
+      company,
     });
-    
-    res.status(201).json(lead)
+
+    res.status(201).json(lead);
   });
 
-  getAll = asyncHandler(async (req: Request, res: Response)=>{
-    const leads = leadService.getAllLeads();
-    res.status(200).json(leads)
-  })
+  getAll = asyncHandler(async (req: Request, res: Response) => {
+    const leads = await leadService.getAllLeads();
+    res.status(200).json(leads);
+  });
 }
 
-export const leadController = new LeadController()
+export const leadController = new LeadController();
