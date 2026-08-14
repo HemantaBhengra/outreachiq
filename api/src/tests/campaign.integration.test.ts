@@ -1,8 +1,13 @@
-import { describe, it, expect } from "vitest"
+import { describe, it, expect,beforeEach } from "vitest"
 import request from "supertest"
 import { app } from "../app"
+import { prisma } from "../lib/prisma"
 
 describe("Campaign Routes — Integration", () => {
+    beforeEach(async () =>{
+        await prisma.campaign.deleteMany()
+    })
+    
     it("should create a campaign with valid data", async () => {
         const res = await request(app)
             .post("/campaigns")

@@ -1,16 +1,21 @@
-import { describe, it, expect } from "vitest"
+import { describe, it, expect, beforeEach } from "vitest"
 import request from "supertest"
 import { app } from "../app"
+import { prisma } from "../lib/prisma"
 
 describe("Lead Routes — Integration", () => {
+
+    beforeEach(async ()=>{
+        await prisma.lead.deleteMany()
+    })
     
     // Test 1: Valid data → 201
     it("should create a lead with valid data", async () => {
         const res = await request(app)
             .post("/leads")
             .send({
-                email: "john@example.com",
-                name: "John Doe",
+                email: "Hemant@example.com",
+                name: "Hemant Bhengra",
                 company: "Acme Corp"
             })
 

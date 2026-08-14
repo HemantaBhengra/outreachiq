@@ -7,12 +7,12 @@ import { CreateCampaignInput, Campaign } from "../types/campaign.types";
 export class CampaignService {
   constructor(private repository: CampaignRepository) {}
 
-  createCampaign(data: CreateCampaignInput): Promise<Campaign> {
-    return this.repository.create(data);
+  async createCampaign(data: CreateCampaignInput): Promise<Campaign> {
+    return await this.repository.create(data);
   }
 
-  getAllCampaigns(): Promise<Campaign[]> {
-    return this.repository.findAll();
+ async getAllCampaigns(): Promise<Campaign[]> {
+    return await this.repository.findAll();
   }
 }
 

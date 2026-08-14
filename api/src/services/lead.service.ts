@@ -1,4 +1,4 @@
-import { promises } from "node:dns";
+
 import {
   leadRepository,
   LeadRepository,
@@ -8,12 +8,12 @@ import { CreateLeadInput, Lead } from "../types/lead.types";
 export class LeadService {
   constructor(private repository: LeadRepository) {}
 
-  createLead(data: CreateLeadInput): Promise<Lead> {
-    return this.repository.create(data);
+  async createLead(data: CreateLeadInput): Promise<Lead> {
+    return await this.repository.create(data);
   }
 
-  getAllLeads(): Promise<Lead[]> {
-    return this.repository.findAll();
+  async getAllLeads(): Promise<Lead[]> {
+    return await this.repository.findAll();
   }
 }
 
