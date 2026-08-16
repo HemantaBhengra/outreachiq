@@ -16,6 +16,25 @@ export class LeadRepository {
     const leads = await prisma.lead.findMany()
     return leads as Lead[]
   }
+
+  async findById(id: string): Promise<Lead | null>{
+    return await prisma.lead.findUnique({
+      where:{id}
+    }) as Lead | null
+  }
+
+  async update(id: string, data: Partial<CreateLeadInput>): Promise<Lead>{
+    return await prisma.lead.update({
+      where:{id},
+      data
+    }) as Lead
+  }
+
+  async delete(id: string): Promise<Lead>{
+    return await prisma.lead.delete({
+      where:{id}
+    }) as Lead
+  }
 }
 
 export const leadRepository = new LeadRepository()

@@ -19,6 +19,7 @@ model Campaign {
   body      String
   userId    String
   status    String   @default("draft")
+  leads     Lead[]   @relation("CampaignLeads")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -28,7 +29,10 @@ model Lead {
   email     String   @unique
   name      String
   company   String
+  campaignId String?
+  campaign Campaign? @relation("CampaignLeads", fields: [campaignId], references: [id])
   status    String   @default("pending")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
