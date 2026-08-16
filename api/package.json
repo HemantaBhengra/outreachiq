@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "tsx src/index.ts",
-    "test": "vitest"
+    "test": "DATABASE_URL='postgresql://postgres:2004@host.docker.internal:5432/outreachiq' vitest"
   },
   "keywords": [],
   "author": "",
