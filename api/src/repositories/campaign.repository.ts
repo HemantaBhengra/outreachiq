@@ -1,19 +1,31 @@
 import { Campaign, CreateCampaignInput } from "../types/campaign.types";
 import { prisma } from "../lib/prisma";
-import { string } from "zod";
+import { json, string } from "zod";
+import { redis } from "../lib/redis";
 
 export class CampaignRepository {
   async create(data: CreateCampaignInput): Promise<Campaign> {
-    return await prisma.campaign.create({
+    const campaign = await prisma.campaign.create({
       data: {
         ...data,
         status: "draft",
       },
     });
+
+    await redis.del("campaign:all");
+    return campaign;
   }
 
   async findAll(): Promise<Campaign[]> {
-    return await prisma.campaign.findMany();
+    const cacheKey = "campaign:all";
+    const cached = await redis.get(cacheKey);
+    if (cached) {
+      return JSON.parse(cached);
+    }
+
+    const campaign = await prisma.campaign.findMany();
+    await redis.setEx(cacheKey, 300, JSON.stringify(campaign));
+    return campaign;
   }
 
   async findById(id: string): Promise<Campaign | null> {
@@ -22,17 +34,26 @@ export class CampaignRepository {
     });
   }
 
-  async update(id: string,data: Partial<CreateCampaignInput>,): Promise<Campaign> {
-    return await prisma.campaign.update({
+  async update(
+    id: string,
+    data: Partial<CreateCampaignInput>,
+  ): Promise<Campaign> {
+    const campaign = await prisma.campaign.update({
       where: { id },
       data,
     });
+
+    await redis.del("campaign:all");
+    return campaign;
   }
 
   async delete(id: string): Promise<Campaign> {
-    return await prisma.campaign.delete({
+    const campaign = await prisma.campaign.delete({
       where: { id },
     });
+
+    await redis.del("campaign:all");
+    return campaign;
   }
 }
 
