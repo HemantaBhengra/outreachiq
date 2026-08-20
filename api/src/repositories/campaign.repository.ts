@@ -1,6 +1,5 @@
 import { Campaign, CreateCampaignInput } from "../types/campaign.types";
 import { prisma } from "../lib/prisma";
-import { json, string } from "zod";
 import { redis } from "../lib/redis";
 
 export class CampaignRepository {
