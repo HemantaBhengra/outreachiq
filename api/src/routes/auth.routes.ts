@@ -12,5 +12,5 @@ const authSchema = z.object({
 
 router.post('/signup', validate(authSchema), authController.signup)
 router.post('/login', validate(authSchema), authController.login)
-
+ 
 export default router

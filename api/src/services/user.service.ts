@@ -4,7 +4,6 @@ import { generateToken } from "../utils/jwt";
 
 export class UserService {
   async signup(email: string, password: string) {
-  
     const existingUser = await userRepository.findByEmail(email);
     if (existingUser) {
       throw new Error("User already exists");
@@ -22,22 +21,21 @@ export class UserService {
     return { user, token };
   }
 
-  async login(email: string, password: string){
-
-    const user = await userRepository.findByEmail(email)
-    if(!user){
-        throw new Error("User not found")
+  async login(email: string, password: string) {
+    const user = await userRepository.findByEmail(email);
+    if (!user) {
+      throw new Error("User not found");
     }
 
-    const isValid = await verifyPassword(password,user.hashedPassword)
-    if(!isValid){
-        throw new Error("Invalid password")
+    const isValid = await verifyPassword(password, user.hashedPassword);
+    if (!isValid) {
+      throw new Error("Invalid password");
     }
 
-    const token = generateToken(user.id)
+    const token = generateToken(user.id);
 
-    return {user , token}
+    return { user, token };
   }
 }
 
-export const userService = new UserService()
+export const userService = new UserService();
