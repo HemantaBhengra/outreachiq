@@ -15,14 +15,18 @@ export class CampaignRepository {
     return campaign;
   }
 
-  async findAll(): Promise<Campaign[]> {
-    const cacheKey = "campaign:all";
+  async findAll(userId:string): Promise<Campaign[]> {
+    const cacheKey = `campaign:${userId}`;
     const cached = await redis.get(cacheKey);
     if (cached) {
       return JSON.parse(cached);
     }
 
-    const campaign = await prisma.campaign.findMany();
+    const campaign = await prisma.campaign.findMany({
+      where: {
+        userId
+      },
+    });
     await redis.setEx(cacheKey, 300, JSON.stringify(campaign));
     return campaign;
   }

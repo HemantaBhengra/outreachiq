@@ -29,6 +29,7 @@ model Lead {
   email      String    @unique
   name       String
   company    String
+  userId     String?
   campaignId String?
   campaign   Campaign? @relation("CampaignLeads", fields: [campaignId], references: [id])
   status     String    @default("pending")

@@ -11,8 +11,8 @@ export class CampaignService {
     return await this.repository.create(data);
   }
 
- async getAllCampaigns(): Promise<Campaign[]> {
-    return await this.repository.findAll();
+ async getAllCampaigns(userId:string): Promise<Campaign[]> {
+    return await this.repository.findAll(userId);
   }
 
   async getCampaignById(id:string): Promise<Campaign | null>{

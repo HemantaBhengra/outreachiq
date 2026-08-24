@@ -15,7 +15,8 @@ class LeadController {
   });
 
   getAll = asyncHandler(async (req: Request, res: Response) => {
-    const leads = await leadService.getAllLeads();
+    const userId = req.userId!;
+    const leads = await leadService.getAllLeads(userId);
     res.status(200).json(leads);
   });
 

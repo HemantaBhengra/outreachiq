@@ -15,16 +15,18 @@ export class LeadRepository {
     return lead as Lead
   }
 
-  async findAll(): Promise<Lead[]> {
+  async findAll(userId:string): Promise<Lead[]> {
 
-    const cacheKey = "lead:all"
+    const cacheKey = `lead:${userId}`
     const cached = await redis.get(cacheKey)
 
     if(cached){
       return JSON.parse(cached)
     }
 
-    const leads = await prisma.lead.findMany()
+    const leads = await prisma.lead.findMany({
+      where:{ userId }
+    })
     await redis.setEx(cacheKey, 300, JSON.stringify(leads))
     return leads as Lead[]
   }

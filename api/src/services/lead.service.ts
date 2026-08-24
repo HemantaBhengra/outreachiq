@@ -12,8 +12,8 @@ export class LeadService {
     return await this.repository.create(data);
   }
 
-  async getAllLeads(): Promise<Lead[]> {
-    return await this.repository.findAll();
+  async getAllLeads(userId: string): Promise<Lead[]> {
+    return await this.repository.findAll(userId);
   }
 
   async getLeadById(id:string):Promise<Lead | null>{
