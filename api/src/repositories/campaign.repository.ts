@@ -8,10 +8,14 @@ export class CampaignRepository {
       data: {
         ...data,
         status: "draft",
-      },
+      }, 
+      include:{
+        leads:true
+      }
+
     });
 
-    await redis.del("campaign:all");
+    await redis.del(`campaign:${data.userId}`);
     return campaign;
   }
 
@@ -26,6 +30,9 @@ export class CampaignRepository {
       where: {
         userId
       },
+      include:{
+        leads:true
+      }
     });
     await redis.setEx(cacheKey, 300, JSON.stringify(campaign));
     return campaign;
@@ -34,6 +41,9 @@ export class CampaignRepository {
   async findById(id: string): Promise<Campaign | null> {
     return await prisma.campaign.findUnique({
       where: { id },
+      include:{
+        leads:true
+      }
     });
   }
 
@@ -44,18 +54,24 @@ export class CampaignRepository {
     const campaign = await prisma.campaign.update({
       where: { id },
       data,
+      include:{
+        leads:true
+      }
     });
 
-    await redis.del("campaign:all");
+    await redis.del(`campaigns:*`);
     return campaign;
   }
 
   async delete(id: string): Promise<Campaign> {
     const campaign = await prisma.campaign.delete({
       where: { id },
+      include:{
+        leads:true
+      }
     });
 
-    await redis.del("campaign:all");
+    await redis.del(`campaigns:*`);
     return campaign;
   }
 }
