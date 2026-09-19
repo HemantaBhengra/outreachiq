@@ -18,9 +18,18 @@
     });
 
     getAll = asyncHandler(async (req: Request, res: Response) => {
-      const userId = req.userId!;
-      const campaigns = await campaignService.getAllCampaigns(userId);
-      res.status(200).json(campaigns);
+      const userId = req.userId as string;
+
+      // page and linit from Queary params
+      let page = parseInt(req.query.page as string) || 1
+      let limit = parseInt(req.query.limit as string) || 10
+
+      // Validate
+      if (page < 1) page = 1
+      if (limit < 1 || limit > 100) limit = 10
+      
+      const result = await campaignService.getAllCampaigns(userId,page,limit);
+      res.status(200).json(result);
     });
 
     getById = asyncHandler(async (req: Request, res: Response) => {

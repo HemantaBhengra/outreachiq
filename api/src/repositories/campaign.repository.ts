@@ -8,42 +8,53 @@ export class CampaignRepository {
       data: {
         ...data,
         status: "draft",
-      }, 
-      include:{
-        leads:true
-      }
-
+      },
+      include: {
+        leads: true,
+      },
     });
 
     await redis.del(`campaign:${data.userId}`);
     return campaign;
   }
 
-  async findAll(userId:string): Promise<Campaign[]> {
+  async findAll(
+    userId: string,
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<{ campaigns: Campaign[]; total: number }> {
     const cacheKey = `campaign:${userId}`;
     const cached = await redis.get(cacheKey);
     if (cached) {
       return JSON.parse(cached);
     }
 
+    const skip = (page - 1) * limit;
+
+    const total = await prisma.campaign.count({ where: { userId } });
+
     const campaign = await prisma.campaign.findMany({
       where: {
-        userId
+        userId,
       },
-      include:{
-        leads:true
-      }
+      include: {
+        leads: true,
+      },
+      skip,
+      take: limit,
+      orderBy: { createdAt: "desc" },
     });
-    await redis.setEx(cacheKey, 300, JSON.stringify(campaign));
-    return campaign;
+    const result = {campaign, total};
+    await redis.setEx(cacheKey, 300, JSON.stringify(result));
+    return result;
   }
 
   async findById(id: string): Promise<Campaign | null> {
     return await prisma.campaign.findUnique({
       where: { id },
-      include:{
-        leads:true
-      }
+      include: {
+        leads: true,
+      },
     });
   }
 
@@ -54,9 +65,9 @@ export class CampaignRepository {
     const campaign = await prisma.campaign.update({
       where: { id },
       data,
-      include:{
-        leads:true
-      }
+      include: {
+        leads: true,
+      },
     });
 
     await redis.del(`campaigns:*`);
@@ -66,9 +77,9 @@ export class CampaignRepository {
   async delete(id: string): Promise<Campaign> {
     const campaign = await prisma.campaign.delete({
       where: { id },
-      include:{
-        leads:true
-      }
+      include: {
+        leads: true,
+      },
     });
 
     await redis.del(`campaigns:*`);

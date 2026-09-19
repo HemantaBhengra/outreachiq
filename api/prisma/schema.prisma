@@ -22,6 +22,8 @@ model Campaign {
   leads     Lead[]   @relation("CampaignLeads")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([userId])
 }
 
 model Lead {
@@ -35,6 +37,9 @@ model Lead {
   status     String    @default("pending")
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([campaignId])
 }
 
 model User {
@@ -43,5 +48,7 @@ model User {
   hashedPassword String
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
+
+  @@index([email])
 }
 

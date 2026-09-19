@@ -11,20 +11,27 @@ export class CampaignService {
     return await this.repository.create(data);
   }
 
- async getAllCampaigns(userId:string): Promise<Campaign[]> {
-    return await this.repository.findAll(userId);
+  async getAllCampaigns(
+    userId: string,
+    page: number = 1,
+    limit: number = 10
+  ): Promise<{ campaigns: Campaign[]; total: number }> {
+    return await this.repository.findAll(userId, page, limit);
   }
 
-  async getCampaignById(id:string): Promise<Campaign | null>{
+  async getCampaignById(id: string): Promise<Campaign | null> {
     return await this.repository.findById(id);
   }
 
-  async updateCampaign(id:string,data: Partial<CreateCampaignInput>): Promise<Campaign>{
-    return await this.repository.update(id,data)
+  async updateCampaign(
+    id: string,
+    data: Partial<CreateCampaignInput>,
+  ): Promise<Campaign> {
+    return await this.repository.update(id, data);
   }
 
-  async deleteCampaign(id:string): Promise<Campaign>{
-    return await this.repository.delete(id)
+  async deleteCampaign(id: string): Promise<Campaign> {
+    return await this.repository.delete(id);
   }
 }
 
