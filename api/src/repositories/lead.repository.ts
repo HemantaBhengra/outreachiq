@@ -10,8 +10,10 @@ export class LeadRepository {
         status: "pending"
       }
     })
-
-    await redis.del("lead:all")
+    
+    if (lead.userId) {
+        await redis.del(`leads:${lead.userId}:*`)
+    }
     return lead as Lead
   }
 
@@ -43,7 +45,10 @@ export class LeadRepository {
       data
     }) as Lead
 
-     await redis.del("lead:all")
+      if (lead.userId) {
+        await redis.del(`leads:${lead.userId}:*`)
+    }
+
      return lead;
   }
 
@@ -52,7 +57,9 @@ export class LeadRepository {
       where:{id}
     }) as Lead
 
-    await redis.del("lead:all")
+      if (lead.userId) {
+        await redis.del(`leads:${lead.userId}:*`)
+    }
     return lead;
   }
 }

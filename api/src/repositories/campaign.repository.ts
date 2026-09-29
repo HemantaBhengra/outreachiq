@@ -14,7 +14,8 @@ export class CampaignRepository {
       },
     });
 
-    await redis.del(`campaign:${data.userId}`);
+    console.log(`CACHE INVALIDATED: campaigns:${data.userId}:*`)
+    await redis.del(`campaign:${data.userId}:*`);
     return campaign;
   }
 
@@ -26,8 +27,10 @@ export class CampaignRepository {
     const cacheKey = `campaign:${userId}`;
     const cached = await redis.get(cacheKey);
     if (cached) {
+      console.log(`Cache hit: ${cacheKey}`);
       return JSON.parse(cached);
     }
+    console.log(`Cache miss: ${cacheKey}`);
 
     const skip = (page - 1) * limit;
 
@@ -44,7 +47,7 @@ export class CampaignRepository {
       take: limit,
       orderBy: { createdAt: "desc" },
     });
-    const result = {campaign, total};
+    const result = { campaign, total };
     await redis.setEx(cacheKey, 300, JSON.stringify(result));
     return result;
   }
@@ -58,10 +61,7 @@ export class CampaignRepository {
     });
   }
 
-  async update(
-    id: string,
-    data: Partial<CreateCampaignInput>,
-  ): Promise<Campaign> {
+  async update(id: string,data: Partial<CreateCampaignInput>,): Promise<Campaign> {
     const campaign = await prisma.campaign.update({
       where: { id },
       data,
@@ -70,7 +70,8 @@ export class CampaignRepository {
       },
     });
 
-    await redis.del(`campaigns:*`);
+    console.log(`CACHE INVALIDATED: campaigns:${campaign.userId}:*`)
+    await redis.del(`campaigns:${campaign.userId}:*`);
     return campaign;
   }
 
@@ -82,7 +83,8 @@ export class CampaignRepository {
       },
     });
 
-    await redis.del(`campaigns:*`);
+    console.log(`CACHE INVALIDATED: campaigns:${campaign.userId}:*`)
+    await redis.del(`campaigns:${campaign.userId}:*`);
     return campaign;
   }
 }
