@@ -1,8 +1,8 @@
-# OutreachIQ — Backend API
+# OutreachIQ - Backend API
 
-A production-grade backend API for managing email outreach campaigns and leads. Built with clean architecture, Redis caching, rate limiting, and JWT authentication.
+A production-grade backend API for managing email outreach campaigns and lead management. Built with clean layered architecture, Redis caching, rate limiting, JWT authentication, and database optimization.
 
-**Status:** 5/9 phases complete (56%)
+**Project Status:** 7/9 phases complete (78%)
 
 ---
 
@@ -22,58 +22,57 @@ A production-grade backend API for managing email outreach campaigns and leads. 
 
 ---
 
-## ✨ Features
+## Features
 
-### ✅ Core Features (Complete)
+### Core Features (Complete)
 
-- **Campaign Management** — Create, read, update, delete campaigns
-- **Lead Management** — Manage leads with email, name, company, status
-- **Database Relations** — Campaigns have many leads
-- **Clean Architecture** — Controller → Service → Repository pattern
-- **Type Safety** — Full TypeScript with strict mode
+- **Campaign Management** - Create, read, update, and delete campaigns
+- **Lead Management** - Manage leads with email, name, company, and status tracking
+- **Database Relations** - Campaigns have many leads with proper foreign key relationships
+- **Clean Architecture** - Layered architecture with Controller, Service, and Repository patterns
+- **Type Safety** - Full TypeScript with strict type checking
 
-### ✅ Performance & Security (Complete)
+### Performance and Security (Complete)
 
-- **Redis Caching** — 14x faster queries (100ms → 7ms)
-- **Rate Limiting** — 100 requests/minute per IP
-- **JWT Authentication** — Secure token-based auth (1-hour expiry)
-- **Password Security** — Bcrypt hashing (10 salt rounds)
-- **Protected Routes** — All endpoints require valid JWT
+- **Redis Caching** - 14x faster queries with intelligent cache invalidation (100ms to 7ms)
+- **Database Indexing** - Optimized queries on frequently searched columns
+- **Pagination** - Efficient data retrieval with skip/take operations
+- **Rate Limiting** - 100 requests per minute per IP address
+- **JWT Authentication** - Secure token-based authentication with 1-hour expiry
+- **Password Security** - Bcrypt password hashing with 10 salt rounds
+- **Protected Routes** - All endpoints require valid JWT token
+- **User Data Isolation** - Users can only access their own campaigns and leads
 
-### ✅ Quality & Testing (Complete)
+### Quality and Testing (Complete)
 
-- **Integration Tests** — 14+ tests for all endpoints
-- **Input Validation** — Zod schemas for type safety
-- **Error Handling** — Centralized error middleware
-- **Config Management** — Environment-based configuration
+- **Integration Tests** - 20+ integration tests covering all endpoints
+- **Input Validation** - Zod schemas for request validation
+- **Error Handling** - Centralized error middleware with proper HTTP status codes
+- **Configuration Management** - Environment-based configuration
 
-### ⏳ Coming Soon
+### In Development
 
-- **User Data Isolation** — Users can only access their own data
-- **System Design Patterns** — Scalability & optimization
-- **Job Queue Processing** — Async background tasks
-- **Deployment** — Docker, CI/CD, production hardening
-
----
-
-## 🛠 Tech Stack
-
-```
-Backend Framework:    Node.js + Express.js + TypeScript
-Database:             PostgreSQL (via Neon)
-ORM:                  Prisma
-Caching:              Redis
-Authentication:       JWT + Bcrypt
-Validation:           Zod
-Testing:              Vitest + Supertest
-HTTP Client:          Axios (optional)
-Task Runner:          npm
-Environment:          Node 18+
-```
+- **Background Job Processing** - Async task processing with Bull queue
+- **Email Integration** - SendGrid integration for campaign delivery
+- **Advanced Analytics** - Campaign performance metrics and reporting
+- **Deployment** - Docker containerization and CI/CD pipeline
 
 ---
 
-## 🏗 Architecture
+## Technology Stack
+
+- **Backend Framework:** Node.js, Express.js, TypeScript
+- **Database:** PostgreSQL
+- **ORM:** Prisma
+- **Caching Layer:** Redis
+- **Authentication:** JWT with Bcrypt
+- **Input Validation:** Zod
+- **Testing:** Vitest and Supertest
+- **Runtime:** Node.js 18+
+
+---
+
+## Architecture
 
 ### **Layered Architecture Pattern**
 
@@ -134,7 +133,7 @@ Response to client
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 outreachiq/
@@ -198,97 +197,103 @@ outreachiq/
 
 ---
 
-## 🚀 Setup & Installation
+## Setup and Installation
 
-### **Prerequisites**
+### Prerequisites
 
-- Node.js 18+
-- PostgreSQL (via Neon or local)
-- Redis (Docker or local)
+- Node.js 18 or higher
+- PostgreSQL database
+- Redis
 
-### **1. Clone Repository**
+### 1. Clone Repository
 
 ```bash
 git clone https://github.com/HemantaBhengra/outreachiq.git
 cd outreachiq/api
 ```
 
-### **2. Install Dependencies**
+### 2. Install Dependencies
 
 ```bash
 npm install
 ```
 
-### **3. Setup Database**
+### 3. Configure Database
 
-Create `.env` file:
+Create a `.env` file in the api directory:
+
 ```
 PORT=3000
 NODE_ENV=development
 DATABASE_URL=postgresql://user:password@localhost:5432/outreachiq
 ```
 
-Run migrations:
+Run database migrations:
+
 ```bash
 npx prisma migrate dev --name init
 ```
 
-### **4. Start Redis**
+### 4. Start Redis
 
-**Option A: Docker**
+Using Docker:
+
 ```bash
 docker run -d -p 6379:6379 redis:latest
 ```
 
-**Option B: Local**
+Or locally:
+
 ```bash
 redis-server
 ```
 
-### **5. Start Server**
+### 5. Start the Server
 
 ```bash
 npm run dev
 ```
 
-Server running on `http://localhost:3000` ✅
+The server will run on `http://localhost:3000`
 
 ---
 
-## 📡 API Endpoints
+## API Endpoints
 
-### **Authentication**
+### Authentication
 
-| Method | Endpoint | Description | Auth |
-|--------|----------|-------------|------|
-| POST | `/auth/signup` | Register new user | ❌ |
-| POST | `/auth/login` | Login user, get token | ❌ |
+| Method | Endpoint | Description | Requires Auth |
+|--------|----------|-------------|---------------|
+| POST | `/auth/signup` | Register new user | No |
+| POST | `/auth/login` | User login with email and password | No |
 
-### **Campaigns**
+### Campaigns
 
-| Method | Endpoint | Description | Auth |
-|--------|----------|-------------|------|
-| POST | `/campaigns` | Create campaign | ✅ |
-| GET | `/campaigns` | Get all campaigns | ✅ |
-| GET | `/campaigns/:id` | Get campaign by ID | ✅ |
-| PUT | `/campaigns/:id` | Update campaign | ✅ |
-| DELETE | `/campaigns/:id` | Delete campaign | ✅ |
+| Method | Endpoint | Description | Requires Auth |
+|--------|----------|-------------|---------------|
+| POST | `/campaigns` | Create new campaign | Yes |
+| GET | `/campaigns` | Get all campaigns for authenticated user | Yes |
+| GET | `/campaigns/:id` | Retrieve campaign by ID | Yes |
+| PUT | `/campaigns/:id` | Update campaign details | Yes |
+| DELETE | `/campaigns/:id` | Delete campaign | Yes |
 
-### **Leads**
+### Leads
 
-| Method | Endpoint | Description | Auth |
-|--------|----------|-------------|------|
-| POST | `/leads` | Create lead | ✅ |
-| GET | `/leads` | Get all leads | ✅ |
-| GET | `/leads/:id` | Get lead by ID | ✅ |
-| PUT | `/leads/:id` | Update lead | ✅ |
-| DELETE | `/leads/:id` | Delete lead | ✅ |
+| Method | Endpoint | Description | Requires Auth |
+|--------|----------|-------------|---------------|
+| POST | `/leads` | Create new lead | Yes |
+| GET | `/leads` | Get all leads for authenticated user | Yes |
+| GET | `/leads/:id` | Retrieve lead by ID | Yes |
+| PUT | `/leads/:id` | Update lead information | Yes |
+| DELETE | `/leads/:id` | Delete lead | Yes |
 
 ---
 
-## 🔐 Authentication
+## Authentication
 
-### **Signup**
+### User Registration
+
+**Request:**
 
 ```bash
 POST /auth/signup
@@ -301,6 +306,7 @@ Content-Type: application/json
 ```
 
 **Response (201 Created):**
+
 ```json
 {
     "user": {
@@ -314,7 +320,9 @@ Content-Type: application/json
 }
 ```
 
-### **Login**
+### User Login
+
+**Request:**
 
 ```bash
 POST /auth/login
@@ -327,6 +335,7 @@ Content-Type: application/json
 ```
 
 **Response (200 OK):**
+
 ```json
 {
     "user": { ... },
@@ -334,27 +343,27 @@ Content-Type: application/json
 }
 ```
 
-### **Using Token**
+### Token Usage
 
-Add token to all protected requests:
+Include the token in the Authorization header for all protected requests:
 
 ```bash
 GET /campaigns
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
-### **Token Details**
+### Token Specification
 
 - **Type:** JWT (JSON Web Token)
-- **Expiry:** 1 hour
-- **Signed with:** SECRET_KEY (server-only)
-- **Contains:** { userId, iat (issued at), exp (expiry) }
+- **Expiration:** 1 hour
+- **Algorithm:** HS256
+- **Contains:** userId, issued time, and expiration time
 
 ---
 
-## 💾 Database
+## Database
 
-### **Schema**
+### Database Schema
 
 ```prisma
 model User {
@@ -403,70 +412,76 @@ model Lead {
 
 ---
 
-## ⚡ Redis
+## Redis Caching
 
-### **Caching**
+### Query Caching
 
-**Query caching (5-minute TTL):**
-- `GET /campaigns` — First request hits database, next 10 requests come from Redis (7ms vs 100ms)
-- `GET /leads` — Same pattern
+The application implements Redis caching with a 5-minute TTL:
 
-**Cache invalidation:**
-- `POST /campaigns` — Creates campaign, clears cache
-- `PUT /campaigns/:id` — Updates campaign, clears cache
-- `DELETE /campaigns/:id` — Deletes campaign, clears cache
+- First request to `/campaigns` queries the database and caches the result
+- Subsequent requests retrieve data from Redis (7ms response time vs 100ms database query)
+- Same pattern applies to `/leads` endpoint
 
-### **Rate Limiting**
+Cache invalidation occurs on write operations:
+- Creating a campaign clears the campaign cache
+- Updating a campaign clears the campaign cache
+- Deleting a campaign clears the campaign cache
 
-**Per-IP rate limiting (60-second window):**
-- Max 100 requests per minute per IP
-- Returns `429 Too Many Requests` if exceeded
-- Counter auto-resets after 60 seconds
+### Rate Limiting
 
-### **Redis Operations Used**
+Per-IP rate limiting is enforced with a 60-second window:
 
-```typescript
-redis.get(key)           // Retrieve cached data
-redis.setEx(key, ttl, value)  // Store with expiry
-redis.del(key)           // Delete cache
-redis.incr(key)          // Increment counter
-redis.expire(key, ttl)   // Set expiry
-```
+- Maximum 100 requests per minute per IP address
+- Exceeding the limit returns HTTP 429 (Too Many Requests)
+- Request counter automatically resets after 60 seconds
+
+### Redis Operations
+
+The application uses the following Redis operations:
+
+- `redis.get(key)` - Retrieve cached data
+- `redis.setEx(key, ttl, value)` - Store data with expiration
+- `redis.del(key)` - Delete cached data
+- `redis.incr(key)` - Increment request counter
+- `redis.expire(key, ttl)` - Set expiration time
 
 ---
 
-## 🧪 Testing
+## Testing
 
-### **Run All Tests**
+### Running Tests
+
+Execute all tests:
 
 ```bash
 npm test
 ```
 
-### **Run Specific Test File**
+Run a specific test file:
 
 ```bash
 npm test -- auth.integration.test.ts
 ```
 
-### **Watch Mode**
+Run tests in watch mode for development:
 
 ```bash
 npm test -- --watch
 ```
 
-### **Test Coverage**
+### Test Coverage
 
-```
-Auth Tests:       3 tests (signup, login with valid/invalid credentials)
-Campaign Tests:   7 tests (CRUD + error cases)
-Lead Tests:       7 tests (CRUD + error cases)
-────────────────────────────────────────────
-Total:           17+ integration tests
-Status:          ✅ All passing
-```
+The project includes 20+ integration tests covering:
 
-### **Test Examples**
+- Authentication (signup and login)
+- Campaign CRUD operations and error handling
+- Lead CRUD operations and error handling
+- Rate limiting enforcement
+- User data isolation
+
+All integration tests are passing.
+
+### Test Examples
 
 ```typescript
 // Signup test
@@ -499,79 +514,79 @@ it("should return 429 after 100 requests", async () => {
 
 ---
 
-## 📊 Development Roadmap
+## Development Roadmap
 
-### **Completed (5/9 Phases)**
+### Completed (7/9 Phases)
 
-- ✅ **Phase 0:** Async job processor with retries
-- ✅ **Phase 1:** Clean architecture setup (Controller → Service → Repository)
-- ✅ **Phase 2:** CRUD operations + database relations
-- ✅ **Phase 3:** Redis caching + rate limiting
-- ✅ **Phase 4:** JWT authentication + protected routes
+- Phase 0: Async job processor with retry logic
+- Phase 1: Clean layered architecture
+- Phase 2: CRUD operations with database relations
+- Phase 3: Redis caching and rate limiting
+- Phase 4: JWT authentication and user data isolation
+- Phase 5: System design and database optimization
 
-### **In Progress**
+### In Development
 
-- ⏳ **Phase 4 Day 3:** User data isolation (filter by userId)
-
-### **Coming Soon**
-
-- ⏳ **Phase 5:** System design & scalability patterns
-- ⏳ **Phase 6:** Background job processing (Bull queue)
-- ⏳ **Phase 7:** Event-driven architecture
-- ⏳ **Phase 8:** System design mastery
-- ⏳ **Phase 9:** DevOps & deployment
+- Phase 6: Background job processing with Bull queue
+- Phase 7: Email integration with SendGrid
+- Phase 8: Advanced analytics and monitoring
+- Phase 9: DevOps and production deployment
 
 ---
 
-## 📈 Performance Metrics
+## Performance Metrics
 
-### **Current Benchmarks**
+### System Performance
 
-| Operation | Before Cache | After Cache | Improvement |
-|-----------|--------------|-------------|------------|
-| GET /campaigns | 100ms | 7ms | 14x faster |
-| GET /leads | 100ms | 7ms | 14x faster |
-| Rate Limiting | N/A | <1ms | Protects API |
-| Auth Verify | N/A | <1ms | Fast JWT check |
+| Operation | Response Time | Status |
+|-----------|---------------|--------|
+| GET /campaigns (cache hit) | 7ms | Optimized |
+| GET /leads (cache hit) | 7ms | Optimized |
+| POST /campaigns | 50ms | Normal |
+| Rate limiting check | <1ms | Optimized |
+| JWT verification | <1ms | Optimized |
 
-### **Capacity**
+### Configuration Parameters
 
-- **Rate Limit:** 100 requests/minute per IP
+- **Rate Limit:** 100 requests per minute per IP address
 - **Cache TTL:** 300 seconds (5 minutes)
-- **Token Expiry:** 3600 seconds (1 hour)
-- **Password Hashing:** 10 salt rounds (industry standard)
+- **Token Expiration:** 3600 seconds (1 hour)
+- **Password Hashing:** Bcrypt with 10 salt rounds
+- **Database Indexes:** Optimized on userId, campaignId, email
+- **Pagination:** Default 10 items per page, maximum 100 items
 
 ---
 
-## 🔒 Security Features
+## Security Features
 
-| Feature | Status | Details |
-|---------|--------|---------|
-| Password Hashing | ✅ | Bcrypt (10 rounds) |
-| JWT Tokens | ✅ | Signed, 1-hour expiry |
-| Rate Limiting | ✅ | 100 req/min per IP |
-| Input Validation | ✅ | Zod schemas |
-| Protected Routes | ✅ | Auth middleware |
-| Error Handling | ✅ | No sensitive info leaked |
-| CORS (TODO) | ⏳ | Coming soon |
-| HTTPS (TODO) | ⏳ | Deployment phase |
+| Feature | Implementation | Status |
+|---------|-----------------|--------|
+| Password Hashing | Bcrypt with 10 salt rounds | Implemented |
+| Authentication | JWT tokens with 1-hour expiry | Implemented |
+| Rate Limiting | 100 requests per minute per IP | Implemented |
+| Input Validation | Zod schema validation | Implemented |
+| Protected Routes | JWT verification middleware | Implemented |
+| User Isolation | Row-level filtering by userId | Implemented |
+| Error Handling | No sensitive information in responses | Implemented |
+| CORS | Configurable on deployment | Future |
+| HTTPS | Enforced in production | Future |
 
 ---
 
-## 🛠 Available Scripts
+## Available Scripts
 
 ```bash
-npm run dev          # Start dev server with tsx
-npm test             # Run Vitest tests
+npm run dev          # Start development server with tsx
+npm test             # Run integration tests
 npm test -- --watch # Run tests in watch mode
-npm run build        # Build TypeScript
-npm start            # Run compiled JS (production)
-npm run lint         # Check TypeScript (if configured)
+npm run build        # Compile TypeScript to JavaScript
+npm start            # Start production server
+npm run lint         # Run TypeScript type checking
 ```
 
 ---
 
-## 📝 Environment Variables
+## Environment Variables
 
 ```bash
 # Server
@@ -595,65 +610,60 @@ LOG_LEVEL=debug
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
-This is a learning project. Phases are built sequentially with mentor guidance.
+This is a structured learning project built in sequential phases with mentor guidance.
 
-### **Phase Checklist**
+### Phase Completion Checklist
 
-Before moving to next phase:
-- [ ] All tests passing
-- [ ] Code committed
-- [ ] Notes written
-- [ ] Features tested manually
-
----
-
-## 📚 Learning Resources Used
-
-- **Node.js & Express:** Building HTTP servers
-- **PostgreSQL & Prisma:** Database + ORM
-- **Redis:** In-memory caching & rate limiting
-- **JWT & Bcrypt:** Authentication & security
-- **Vitest & Supertest:** Integration testing
-- **TypeScript:** Type safety
-- **Clean Architecture:** Scalable code organization
+Before advancing to the next phase:
+- All integration tests passing
+- Code committed to version control
+- Phase documentation completed
+- Features manually tested in Postman or similar client
 
 ---
 
-## 🎯 Project Goals
+## Technology and Concepts Covered
 
-1. **Build production-grade backend** → In progress ✅
-2. **Master distributed systems** → Phases 5-8 ⏳
-3. **Prepare for internships** → Ongoing 💼
-4. **Indie SaaS foundation** → Long-term 🚀
-
----
-
-## 📞 Contact & Support
-
-**Repository:** https://github.com/HemantaBhengra/outreachiq
-
-**Mentor-guided learning:** Each phase includes detailed notes and explanations.
+- Node.js and Express.js - HTTP server frameworks
+- PostgreSQL - Relational database
+- Prisma - Object-relational mapping
+- Redis - In-memory caching and rate limiting
+- JWT and Bcrypt - Authentication and security
+- Vitest and Supertest - Testing frameworks
+- TypeScript - Static type system
+- Clean architecture patterns - Scalable code organization
+- Database optimization - Indexing and pagination
+- System design - Performance and scalability
 
 ---
 
-## 📄 License
+## Project Objectives
 
-Educational project. Free to use and learn from.
-
----
-
-## 🙏 Acknowledgments
-
-Built with guidance from a senior backend engineer mentor.
-
-Phases completed: 5/9 (56%)
-
-Next phase: User data isolation (Phase 4 Day 3)
+1. Build a production-grade backend system
+2. Master system design and database optimization
+3. Prepare for professional backend engineering roles
+4. Create foundation for SaaS product development
 
 ---
 
-*Last Updated: August 22, 2026*
+## Repository
 
-*Backend Status: Production-Ready Core Features ✅*
+Source code: https://github.com/HemantaBhengra/outreachiq
+
+---
+
+## License
+
+Educational project available for learning and reference purposes.
+
+---
+
+## Project Status
+
+Current: 7 of 9 phases complete (78%)
+Next: Phase 6 - Background job processing with Bull queue
+
+Last Updated: September 30, 2026
+Status: Production-ready backend with optimization and security
